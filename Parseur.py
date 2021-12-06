@@ -1,7 +1,8 @@
 import os.path
 import sys
+from tkinter import filedialog, Tk
+import webbrowser
 
-file_path = "code_asm/test_integration/data_processing/11-12_instructions.s"
 new_file_name = "Parsed_File.bin"
 
 
@@ -24,17 +25,21 @@ if __name__ == '__main__':
     instructions = []
     count_instructions = 0
 
-    # Possibility to give Path to any File
-    string_entered = str(input("Enter Path of wanted file to Parse: "))
-    if string_entered:
-        file_path = string_entered
-    else:
-        print(file_path)
-    print()
+    root = Tk()
+    root.withdraw()
+    root.wm_attributes('-topmost', 1)
+
+    # Choosing File to Parse
+    file_path = filedialog.askopenfilename(parent=root, title="Python Parser - Select File to Parse",
+                                           filetypes=[("S File", ".s")])
+    try:
+        file = open(file_path, 'r')
+    except Exception as e:
+        print("No File was Selected ->", e)
+        exit(0)
 
     # Reads from given File
     print("--- Parsing ---")
-    file = open(file_path, 'r')
     for line in file.readlines():
         line = line.replace("\n", "").replace(",", "").lower()
         if line[-1:] == " ":
@@ -188,5 +193,8 @@ if __name__ == '__main__':
         file.write(h.replace("0x", "") + " ")
     file.close()
 
+    # Show Results
     print("--- Instructions Parsed ---")
     print(instructions, str(len(instructions)) + "/" + str(count_instructions), "Instructions")
+
+    webbrowser.open(new_file_name)
