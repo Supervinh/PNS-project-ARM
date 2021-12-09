@@ -1,7 +1,7 @@
 import os.path
 import re
 import sys
-# import webbrowser
+import webbrowser
 from tkinter import filedialog, Tk
 
 import prettytable
@@ -11,7 +11,7 @@ new_file_name = "Parsed_File.bin"
 
 # Converts an Integer to a Binary String
 def int_2_bin(n, size=0):
-    n = str(n).replace("#", "").replace("r", "")
+    n = onlyInts(str(n))
     binary_text = "{0:b}".format(int(n))
     if size != 0 and len(binary_text) > size:
         binary_text = binary_text[len(binary_text) - size:]
@@ -64,9 +64,12 @@ def parse_from_line(w):
             if len(w) == 4 and w[3][:1] == "#":
                 args = "Rd=" + onlyInts(w[1]) + ", Rn=" + onlyInts(w[2]) + ", imm3=" + onlyInts(w[3])
                 binary = "0001110" + int_2_bin(w[3], 3) + int_2_bin(w[2], 3) + int_2_bin(w[1], 3)
-            if len(w) == 3:  # Number of Arguments ? Can change ?
+            if len(w) == 3 and w[1] != "sp":  # Number of Arguments ? Can change ?
                 args = "Rdn=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[2])
                 binary = "00110" + int_2_bin(w[1], 3) + int_2_bin(w[2], 8)
+            if len(w) == 3 and w[1] == "sp":
+                args = "imm7=" + onlyInts(w[2])
+                binary = "101100000" + int_2_bin(int(int(onlyInts(w[2])) / 4), 7)
 
         case "sub":
             if len(w) == 4 and w[3][:1] == "r":
@@ -75,9 +78,12 @@ def parse_from_line(w):
             if len(w) == 4 and w[3][:1] == "#":
                 args = "Rd=" + onlyInts(w[1]) + ", Rn=" + onlyInts(w[2]) + ", imm3=" + onlyInts(w[3])
                 binary = "0001111" + int_2_bin(w[3], 3) + int_2_bin(w[2], 3) + int_2_bin(w[1], 3)
-            if len(w) == 3:  # Number of Arguments ? Can Change ?
+            if len(w) == 3 and w[1] != "sp":  # Number of Arguments ? Can Change ?
                 args = "Rdn=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[2])
                 binary = "00111" + int_2_bin(w[1], 3) + int_2_bin(w[2], 8)
+            if len(w) == 3 and w[1] == "sp":
+                args = "imm7=" + onlyInts(w[2])
+                binary = "101100001" + int_2_bin(int(int(onlyInts(w[2])) / 4), 7)
 
         case "mov":
             if len(w) == 3:
@@ -154,23 +160,17 @@ def parse_from_line(w):
 
         case "str":
             if len(w) == 3:
-                args = "Rt=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[2])
-                binary = "10010" + int_2_bin(w[1], 3) + int_2_bin(int(int(w[2]) / 4), 8)
+                w.append("0")
+            if len(w) == 4:
+                args = "Rt=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[3])
+                binary = "10010" + int_2_bin(w[1], 3) + int_2_bin(int(int(onlyInts(w[3])) / 4), 8)
 
         case "ldr":
             if len(w) == 3:
-                args = "Rt=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[2])
-                binary = "10011" + int_2_bin(w[1], 3) + int_2_bin(int(int(w[2]) / 4), 8)
-
-        case "add":  # With SP
-            if len(w) == 2:  # Number of Arguments ?
-                args = "imm7=" + onlyInts(w[1])
-                binary = "101100000" + int_2_bin(int(int(w[1]) / 4), 7)
-
-        case "sub":  # With SP
-            if len(w) == 2:  # Number of Arguments ?
-                args = "imm7=" + onlyInts(w[1])
-                binary = "101100001" + int_2_bin(int(int(w[1]) / 4), 7)
+                w.append("0")
+            if len(w) == 4:
+                args = "Rt=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[3])
+                binary = "10011" + int_2_bin(w[1], 3) + int_2_bin(int(int(onlyInts(w[3])) / 4), 8)
 
         case "B":  # Branches Conditional and Unconditional
             if len(w) == 3:  # words[1] & words[2] ?
@@ -290,4 +290,4 @@ if __name__ == '__main__':
             file.write("\n")
     file.close()
 
-    # webbrowser.open(new_file_name)
+    webbrowser.open(new_file_name)
