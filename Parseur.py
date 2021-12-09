@@ -3,6 +3,8 @@ import sys
 import webbrowser
 from tkinter import filedialog, Tk
 
+import prettytable
+
 new_file_name = "Parsed_File.bin"
 
 
@@ -143,19 +145,42 @@ def parse_from_line(w):
     return binary
 
 
+def table_width(tab):
+    count = 0
+    for char in tab.get_string():
+        if char != "\n":
+            count += 1
+        else:
+            break
+    return count
+
+
 if __name__ == '__main__':
     # Initialise list of Instructions and Count
-    instructions = []
-    count_instructions = 0
+    instructions_total = []
+    count_instructions_total = 0
+    pc_count = 0
 
+    # Setting up variables for Visuals
     root = Tk()
     root.withdraw()
     root.wm_attributes('-topmost', 1)
+    table = prettytable.PrettyTable()
 
     # Choosing File to Parse
     files_path = filedialog.askopenfilenames(parent=root, title="Python Parser - Select File to Parse",
                                              filetypes=[("S File", ".s")])
+
+    if not files_path:
+        print("No Files Selected")
+        exit(0)
+
     for file_path in files_path:
+        instructions = []
+        count_instructions = 0
+        print()
+        table.clear()
+        table.field_names = ["PC", "Instruction", "Arguments", "Hex Op"]
         file = None
         try:
             file = open(file_path, 'r')
@@ -165,7 +190,6 @@ if __name__ == '__main__':
 
         # Reads from given File
         text, title = os.path.split(file_path)
-        print("--- Parsing " + title + " ---")
         for line in file.readlines():
             line = line.replace("\n", "").replace(",", "").lower()
             if line[-1:] == " ":
@@ -173,22 +197,44 @@ if __name__ == '__main__':
 
             # Only Reads lines that are not empty and not in comments
             if line[:1] != "@" and line:
-                sys.stdout.write(line)
                 words = line.split(" ")
                 words[0] = words[0][:3]
-                parsed_binary = parse_from_line(words)
+
+                # Setting Text for Table
+                pc = bin_2_hex(int_2_bin(pc_count))
+                instruction = line
+                arguments = "None"
+                hex_op = bin_2_hex(parse_from_line(words))
 
                 # Adding Binary string to Instructions
-                if parsed_binary:
-                    instructions.append(parsed_binary)
-                count_instructions += 1
-                print()
-        file.close()
-        print()
+                if hex_op:
+                    instructions.append(hex_op)
 
-    # Convert all Binaries to Hexadecimals
-    for i in range(len(instructions)):
-        instructions[i] = bin_2_hex(instructions[i])
+                # Increment Counters
+                pc_count += 2
+                count_instructions += 1
+                table.add_row([pc, line, arguments, hex_op])
+        file.close()
+        for i in instructions:
+            instructions_total.append(i)
+        count_instructions_total += count_instructions
+
+        # Calculate Indentation Title
+        title = "--- Parsing " + title + " ---"
+        count_chars = table_width(table)
+        before_spaces = int((count_chars - len(title)) * 0.5)
+        print(" " * before_spaces + title)
+
+        # Show Table
+        table.align["Instruction"] = "l"
+        table.align["Arguments"] = "l"
+        print(table)
+
+        # Calculate Indentation Results
+        result = str(len(instructions)) + "/" + str(count_instructions) + " Instructions Parsed"
+        before_spaces = int((count_chars - len(result)) * 0.5)
+        print(" " * before_spaces + result)
+        print()
 
     # Delete New File if it already Exists
     if os.path.exists(new_file_name):
@@ -196,11 +242,13 @@ if __name__ == '__main__':
 
     # Writing Hexadecimals to New File
     file = open(new_file_name, "w")
-    for h in instructions:
+    file.write("v2.0 raw\n")
+    count = 0
+    for h in instructions_total:
+        count += 1
         file.write(h.replace("0x", "") + " ")
+        if count % 16 == 0:
+            file.write("\n")
     file.close()
 
-    # Show Results
-    print("--- Instructions Parsed ---")
-    print(instructions, str(len(instructions)) + "/" + str(count_instructions), "Instructions")
     webbrowser.open(new_file_name)
