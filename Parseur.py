@@ -11,21 +11,28 @@ new_file_name = "Parsed_File.bin"
 
 # Converts an Integer to a Binary String
 def int_2_bin(n, size=0):
-    n = onlyInts(str(n))
-    binary_text = "{0:b}".format(int(n))
-    if size != 0 and len(binary_text) > size:
-        binary_text = binary_text[len(binary_text) - size:]
-    return "0" * (size - len(binary_text)) + binary_text
+    return f"{int(onlyInts(str(n))):0{size}b}"
 
 
 # Converts a Binary string to Hexadecimal string
-def bin_2_hex(bin_string):
-    return hex(int(bin_string, 2))
+def bin_2_hex(bin_string, size=0):
+    return f"{int(bin_string, 2):#0{size}x}"
 
 
 # Only Keeps Integers in a String
 def onlyInts(text):
     return re.sub("[^0-9]", "", text)
+
+
+# Move back to line with Label
+def gotoLabel(f, label_name):
+    f.seek(0)
+    line_nb = 0
+    for _line in f.readlines():
+        if _line == label_name:
+            break
+        line_nb += 1
+    return line_nb
 
 
 # Matches Keyword with Instructions
@@ -166,13 +173,14 @@ def parse_from_line(w):
                 binary = "10010" + int_2_bin(w[1], 3) + int_2_bin(int(int(onlyInts(w[3])) / 4), 8)
 
         case "ldr":
+            print(w)
             if len(w) == 3:
                 w.append("0")
             if len(w) == 4:
                 args = "Rt=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[3])
                 binary = "10011" + int_2_bin(w[1], 3) + int_2_bin(int(int(onlyInts(w[3])) / 4), 8)
 
-        case "B":  # Branches Conditional and Unconditional
+        case "b":  # Branches Conditional and Unconditional
             if len(w) == 3:  # words[1] & words[2] ?
                 args = "cond=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[2])
                 binary = "1101" + int_2_bin(w[2], 4) + int_2_bin(w[1], 8)
@@ -182,7 +190,7 @@ def parse_from_line(w):
 
         case _:
             sys.stdout.write("Error")
-    return bin_2_hex(binary), args
+    return bin_2_hex(binary, 6), args
 
 
 def table_width(tab):
@@ -231,17 +239,18 @@ if __name__ == '__main__':
         # Reads from given File
         t, title = os.path.split(file_path)
         for line in file.readlines():
-            line = line.replace("\n", "").replace(",", "").lower()
+
+            line = line.replace("\n", "").replace(",", " ").replace("  ", " ").lower()
             if line[-1:] == " ":
                 line = line[:-1]
 
             # Only Reads lines that are not empty and not in comments
-            if line[:1] != "@" and line:
+            if line[:1] != "@" and line[:1] != "." and line:
                 words = line.split(" ")
                 words[0] = words[0][:3]
 
                 # Setting Text for Table
-                pc = bin_2_hex(int_2_bin(pc_count))
+                pc = bin_2_hex(int_2_bin(pc_count), 6)
                 instruction = line
                 hex_op, arguments = parse_from_line(words)
 
