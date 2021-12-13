@@ -1,6 +1,5 @@
 import os.path
 import re
-import sys
 import webbrowser
 from tkinter import filedialog, Tk
 
@@ -11,12 +10,19 @@ new_file_name = "Parsed_File.bin"
 
 # Converts an Integer to a Binary String
 def int_2_bin(n, size=0):
+    if "-" in str(n):
+        return negative_int_2_bin(n, size)
     return f"{int(onlyInts(str(n))):0{size}b}"
 
 
 # Converts a Binary string to Hexadecimal string
 def bin_2_hex(bin_string, size=0):
     return f"{int(bin_string, 2):#0{size}x}"
+
+
+# Converts < 0 int to Binary String
+def negative_int_2_bin(n, size=32):
+    return str(bin(n & (2 ** size - 1)))[2:]
 
 
 # Only Keeps Integers in a String
@@ -33,6 +39,44 @@ def gotoLabel(f, label_name):
             break
         line_nb += 1
     return line_nb
+
+
+# Get Cond binary value for Branch
+def getBranchValue(extension):
+    match extension:
+        case "eq":
+            branch_value = "0"
+        case "eq":
+            branch_value = "1"
+        case "cs" | "hs":
+            branch_value = "2"
+        case "cc | lo":
+            branch_value = "3"
+        case "mi":
+            branch_value = "4"
+        case "pl":
+            branch_value = "5"
+        case "vs":
+            branch_value = "6"
+        case "vc":
+            branch_value = "7"
+        case "hi":
+            branch_value = "8"
+        case "ls":
+            branch_value = "9"
+        case "ge":
+            branch_value = "10"
+        case "lt":
+            branch_value = "11"
+        case "gt":
+            branch_value = "12"
+        case "le":
+            branch_value = "13"
+        case "al":
+            branch_value = "14"
+        case _:
+            branch_value = "15"
+    return branch_value
 
 
 # Matches Keyword with Instructions
@@ -180,16 +224,33 @@ def parse_from_line(w):
                 args = "Rt=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[3])
                 binary = "10011" + int_2_bin(w[1], 3) + int_2_bin(int(int(onlyInts(w[3])) / 4), 8)
 
-        case "b":  # Branches Conditional and Unconditional
-            if len(w) == 3:  # words[1] & words[2] ?
-                args = "cond=" + onlyInts(w[1]) + ", imm8=" + onlyInts(w[2])
-                binary = "1101" + int_2_bin(w[2], 4) + int_2_bin(w[1], 8)
-            elif len(w) == 2:
-                args = "imm11=" + onlyInts(w[1])
-                binary = "11100" + int_2_bin(w[1], 11)  # words[1] ?
-
         case _:
-            sys.stdout.write("Error")
+            if w[0][0] == "b":
+                if w[0] != "b":
+                    w.append(w[1])
+                    w[1] = w[0][1:]
+                    w[0] = "b"
+
+                if len(w) == 3:
+                    w[1] = getBranchValue(w[1])
+                    w[2] = labels.get(w[len(w) - 1]) - count_instructions
+                    if w[2] >= 0:
+                        w[2] -= 3
+                    else:
+                        w[2] += 1
+                    args = "cond=" + onlyInts(w[1]) + ", imm8=" + str(w[2])
+                    binary = "1101" + int_2_bin(w[1], 4) + int_2_bin(w[2], 8)
+                elif len(w) == 2:
+                    w[1] = labels.get(w[len(w) - 1]) - count_instructions
+                    if w[1] >= 0:
+                        w[1] -= 4
+                    else:
+                        w[1] += 1
+                    args = "imm11=" + str(w[1])
+                    binary = "11100" + int_2_bin(w[1], 11)
+            else:
+                print("Error")
+
     return bin_2_hex(binary, 6), args
 
 
@@ -226,42 +287,62 @@ if __name__ == '__main__':
     for file_path in files_path:
         instructions = []
         count_instructions = 0
-        print()
+        line_number = 0
+        labels = {}
+
         table.clear()
         table.field_names = ["PC", "Instruction", "Arguments", "Hex Op"]
         file = None
         try:
             file = open(file_path, 'r')
         except Exception as e:
-            print("No File was Selected ->", e)
+            print("Couldn't open file:", e)
             exit(0)
 
-        # Reads from given File
+        # Get name of file
         t, title = os.path.split(file_path)
-        for line in file.readlines():
 
+        # Add Labels to Dictionary
+        for line in file.readlines():
+            line = line.replace("\n", "").replace(",", " ").replace("  ", " ").lower()
+            if line[:1] != "@" and line:
+                if line[:1] == ".":
+                    labels[line.replace(":", "")] = line_number
+                line_number += 1
+        line_number = 0
+
+        # Restarts from the beginning
+        file.seek(0)
+
+        # Parsing
+        for line in file.readlines():
             line = line.replace("\n", "").replace(",", " ").replace("  ", " ").lower()
             if line[-1:] == " ":
                 line = line[:-1]
 
             # Only Reads lines that are not empty and not in comments
-            if line[:1] != "@" and line[:1] != "." and line:
-                words = line.split(" ")
-                words[0] = words[0][:3]
+            if line[:1] != "@" and line:
+                if line[:1] != ".":
 
-                # Setting Text for Table
-                pc = bin_2_hex(int_2_bin(pc_count), 6)
-                instruction = line
-                hex_op, arguments = parse_from_line(words)
+                    words = line.split(" ")
+                    words[0] = words[0][:3]
 
-                # Adding Binary string to Instructions
-                if hex_op:
-                    instructions.append(hex_op)
+                    # Setting Text for Table
+                    pc = bin_2_hex(int_2_bin(pc_count), 6)
+                    instruction = line
+                    hex_op, arguments = parse_from_line(words)
 
-                # Increment Counters
-                pc_count += 2
+                    # Adding Binary string to Instructions
+                    if hex_op:
+                        instructions.append(hex_op)
+
+                    table.add_row([pc, line, arguments, hex_op])
+
+                    # Increment Counters
+                    line_number += 1
+                    pc_count += 1
                 count_instructions += 1
-                table.add_row([pc, line, arguments, hex_op])
+
         file.close()
         for i in instructions:
             instructions_total.append(i)
@@ -271,7 +352,7 @@ if __name__ == '__main__':
         title = "--- Parsing " + title + " ---"
         count_chars = table_width(table)
         before_spaces = int((count_chars - len(title)) * 0.5)
-        print(" " * before_spaces + title)
+        print("\n" + " " * before_spaces + title)
 
         # Show Table
         table.align["Instruction"] = "l"
@@ -279,7 +360,7 @@ if __name__ == '__main__':
         print(table)
 
         # Calculate Indentation Results
-        result = str(len(instructions)) + "/" + str(count_instructions) + " Instructions Parsed"
+        result = str(len(instructions)) + "/" + str(line_number) + " Instructions Parsed"
         before_spaces = int((count_chars - len(result)) * 0.5)
         print(" " * before_spaces + result)
         print()
