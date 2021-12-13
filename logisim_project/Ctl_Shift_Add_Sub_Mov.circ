@@ -336,4 +336,13 @@ end TCL_Generic;
       <a name="text" val="ALU will use Imm32 instead of Rm"/>
     </comp>
   </circuit>
+  <circuit name="Test">
+    <a name="appearance" val="logisim_evolution"/>
+    <a name="circuit" val="Test"/>
+    <a name="circuitnamedboxfixedsize" val="true"/>
+    <a name="circuitvhdlpath" val=""/>
+    <a name="clabel" val=""/>
+    <a name="clabelfont" val="SansSerif bold 16"/>
+    <a name="clabelup" val="east"/>
+  </circuit>
 </project>

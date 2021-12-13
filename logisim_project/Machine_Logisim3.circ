@@ -1651,23 +1651,23 @@ end TCL_Generic;
     </comp>
     <comp lib="5" loc="(1100,1110)" name="TTY"/>
     <comp lib="5" loc="(130,1030)" name="DipSwitch">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@56f1beeb"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@642b8452"/>
       <a name="labelloc" val="south"/>
     </comp>
     <comp lib="5" loc="(140,1150)" name="Keyboard"/>
     <comp lib="5" loc="(20,1030)" name="DipSwitch">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@71d4f5ec"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@f2c8ada"/>
       <a name="labelloc" val="south"/>
     </comp>
     <comp lib="5" loc="(240,1030)" name="DipSwitch">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@75418376"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@74ab0bf6"/>
       <a name="labelloc" val="south"/>
     </comp>
     <comp lib="5" loc="(360,1120)" name="Joystick">
       <a name="bits" val="5"/>
     </comp>
     <comp lib="5" loc="(450,1010)" name="DotMatrix">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@17168703"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@125417e2"/>
       <a name="inputtype" val="row"/>
       <a name="matrixcols" val="8"/>
       <a name="matrixrows" val="4"/>
@@ -1682,39 +1682,39 @@ end TCL_Generic;
       <a name="labelloc" val="east"/>
     </comp>
     <comp lib="5" loc="(630,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@4c4b75ec"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@2ae508ee"/>
     </comp>
     <comp lib="5" loc="(670,1020)" name="DotMatrix">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@1a66821c"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@41743d32"/>
       <a name="inputtype" val="row"/>
       <a name="matrixcols" val="32"/>
       <a name="matrixrows" val="1"/>
     </comp>
     <comp lib="5" loc="(670,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@63c5f815"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@6d2c7a51"/>
     </comp>
     <comp lib="5" loc="(710,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@40c845f1"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@5f758b11"/>
     </comp>
     <comp lib="5" loc="(750,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@57bbbc11"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@5d555a69"/>
     </comp>
     <comp lib="5" loc="(770,910)" name="Button">
       <a name="facing" val="west"/>
       <a name="labelloc" val="east"/>
     </comp>
     <comp lib="5" loc="(870,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@7963b298"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@3d28715c"/>
     </comp>
     <comp lib="5" loc="(890,910)" name="Button"/>
     <comp lib="5" loc="(910,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@352ae8f1"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@33587a5a"/>
     </comp>
     <comp lib="5" loc="(950,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@37cfc468"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@40864223"/>
     </comp>
     <comp lib="5" loc="(990,1110)" name="Hex Digit Display">
-      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@3d9eadb4"/>
+      <a name="Dummy" val="com.cburch.logisim.fpga.data.ComponentMapInformationContainer@3777de48"/>
     </comp>
     <comp lib="8" loc="(1231,132)" name="Text">
       <a name="font" val="SansSerif plain 20"/>
@@ -2315,19 +2315,20 @@ end TCL_Generic;
     <wire from="(240,360)" to="(240,430)"/>
     <wire from="(240,360)" to="(800,360)"/>
     <wire from="(240,430)" to="(360,430)"/>
-    <wire from="(320,190)" to="(320,740)"/>
-    <wire from="(320,190)" to="(460,190)"/>
-    <wire from="(320,740)" to="(810,740)"/>
+    <wire from="(300,190)" to="(300,720)"/>
+    <wire from="(300,190)" to="(360,190)"/>
+    <wire from="(300,720)" to="(810,720)"/>
     <wire from="(330,150)" to="(330,160)"/>
     <wire from="(330,150)" to="(480,150)"/>
     <wire from="(330,330)" to="(330,410)"/>
     <wire from="(330,330)" to="(770,330)"/>
     <wire from="(330,410)" to="(360,410)"/>
+    <wire from="(340,450)" to="(340,780)"/>
+    <wire from="(340,450)" to="(360,450)"/>
+    <wire from="(340,780)" to="(840,780)"/>
+    <wire from="(360,170)" to="(360,190)"/>
+    <wire from="(360,170)" to="(480,170)"/>
     <wire from="(360,240)" to="(360,390)"/>
-    <wire from="(360,450)" to="(360,780)"/>
-    <wire from="(360,780)" to="(840,780)"/>
-    <wire from="(460,170)" to="(460,190)"/>
-    <wire from="(460,170)" to="(480,170)"/>
     <wire from="(490,180)" to="(490,230)"/>
     <wire from="(490,230)" to="(540,230)"/>
     <wire from="(510,160)" to="(700,160)"/>
@@ -2383,7 +2384,7 @@ end TCL_Generic;
     <wire from="(790,430)" to="(790,460)"/>
     <wire from="(790,560)" to="(790,630)"/>
     <wire from="(800,220)" to="(800,360)"/>
-    <wire from="(810,570)" to="(810,740)"/>
+    <wire from="(810,570)" to="(810,720)"/>
     <wire from="(810,90)" to="(810,130)"/>
     <wire from="(830,70)" to="(830,130)"/>
     <wire from="(840,480)" to="(1040,480)"/>
