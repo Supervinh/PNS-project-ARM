@@ -1,6 +1,6 @@
 import os.path
 import re
-import webbrowser
+# import webbrowser
 from tkinter import filedialog, Tk
 
 import prettytable
@@ -231,21 +231,20 @@ def parse_from_line(w):
                     w[1] = w[0][1:]
                     w[0] = "b"
 
+                number_of_labels_passed = 0
+                for label in labels:
+                    if line_number < labels.get(label) < labels.get(w[len(w) - 1]):
+                        number_of_labels_passed += 1
+                    if labels.get(w[len(w) - 1]) < labels.get(label) < line_number:
+                        number_of_labels_passed -= 1
+
                 if len(w) == 3:
                     w[1] = getBranchValue(w[1])
-                    w[2] = labels.get(w[len(w) - 1]) - count_instructions
-                    if w[2] >= 0:
-                        w[2] -= 3
-                    else:
-                        w[2] += 1
+                    w[2] = labels.get(w[len(w) - 1]) - line_number - number_of_labels_passed - 3
                     args = "cond=" + onlyInts(w[1]) + ", imm8=" + str(w[2])
                     binary = "1101" + int_2_bin(w[1], 4) + int_2_bin(w[2], 8)
                 elif len(w) == 2:
-                    w[1] = labels.get(w[len(w) - 1]) - count_instructions
-                    if w[1] >= 0:
-                        w[1] -= 4
-                    else:
-                        w[1] += 1
+                    w[1] = labels.get(w[len(w) - 1]) - line_number - number_of_labels_passed - 3
                     args = "imm11=" + str(w[1])
                     binary = "11100" + int_2_bin(w[1], 11)
             else:
@@ -264,11 +263,26 @@ def table_width(tab):
     return nb
 
 
+def string_in_red(text):
+    return '\33[31m' + text + '\033[0m'
+
+
+def string_in_green(text):
+    return '\33[32m' + text + '\033[0m'
+
+
+def string_in_yellow(text):
+    return '\33[33m' + text + '\033[0m'
+
+
+def string_in_blue(text):
+    return '\33[34m' + text + '\033[0m'
+
+
 if __name__ == '__main__':
     # Initialise list of Instructions and Count
     instructions_total = []
     count_instructions_total = 0
-    pc_count = 0
 
     # Setting up variables for Visuals
     root = Tk()
@@ -291,7 +305,8 @@ if __name__ == '__main__':
         labels = {}
 
         table.clear()
-        table.field_names = ["PC", "Instruction", "Arguments", "Hex Op"]
+        table.field_names = [string_in_green("PC"), string_in_green("Instruction"), string_in_green("Arguments"),
+                             string_in_green("Hex Op")]
         file = None
         try:
             file = open(file_path, 'r')
@@ -323,12 +338,11 @@ if __name__ == '__main__':
             # Only Reads lines that are not empty and not in comments
             if line[:1] != "@" and line:
                 if line[:1] != ".":
-
                     words = line.split(" ")
                     words[0] = words[0][:3]
 
                     # Setting Text for Table
-                    pc = bin_2_hex(int_2_bin(pc_count), 6)
+                    pc = bin_2_hex(int_2_bin(count_instructions), 6)
                     instruction = line
                     hex_op, arguments = parse_from_line(words)
 
@@ -336,12 +350,11 @@ if __name__ == '__main__':
                     if hex_op:
                         instructions.append(hex_op)
 
-                    table.add_row([pc, line, arguments, hex_op])
+                    table.add_row([string_in_red(pc), string_in_blue(line), string_in_blue(arguments), string_in_red(hex_op)])
 
                     # Increment Counters
-                    line_number += 1
-                    pc_count += 1
-                count_instructions += 1
+                    count_instructions += 1
+                line_number += 1
 
         file.close()
         for i in instructions:
@@ -355,12 +368,12 @@ if __name__ == '__main__':
         print("\n" + " " * before_spaces + title)
 
         # Show Table
-        table.align["Instruction"] = "l"
-        table.align["Arguments"] = "l"
+        table.align[string_in_green("Instruction")] = "l"
+        table.align[string_in_green("Arguments")] = "l"
         print(table)
 
         # Calculate Indentation Results
-        result = str(len(instructions)) + "/" + str(line_number) + " Instructions Parsed"
+        result = str(len(instructions)) + "/" + str(count_instructions_total) + " Instructions Parsed"
         before_spaces = int((count_chars - len(result)) * 0.5)
         print(" " * before_spaces + result)
         print()
@@ -380,4 +393,4 @@ if __name__ == '__main__':
             file.write("\n")
     file.close()
 
-    webbrowser.open(new_file_name)
+    # webbrowser.open(new_file_name)
