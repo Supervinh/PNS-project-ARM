@@ -1,6 +1,6 @@
 import os.path
 import re
-# import webbrowser
+import webbrowser
 from tkinter import filedialog, Tk
 
 import prettytable
@@ -263,22 +263,6 @@ def table_width(tab):
     return nb
 
 
-def string_in_red(text):
-    return '\33[31m' + text + '\033[0m'
-
-
-def string_in_green(text):
-    return '\33[32m' + text + '\033[0m'
-
-
-def string_in_yellow(text):
-    return '\33[33m' + text + '\033[0m'
-
-
-def string_in_blue(text):
-    return '\33[34m' + text + '\033[0m'
-
-
 if __name__ == '__main__':
     # Initialise list of Instructions and Count
     instructions_total = []
@@ -305,8 +289,7 @@ if __name__ == '__main__':
         labels = {}
 
         table.clear()
-        table.field_names = [string_in_green("PC"), string_in_green("Instruction"), string_in_green("Arguments"),
-                             string_in_green("Hex Op")]
+        table.field_names = ["PC", "Instruction", "Arguments", "Hex Op"]
         file = None
         try:
             file = open(file_path, 'r')
@@ -350,7 +333,8 @@ if __name__ == '__main__':
                     if hex_op:
                         instructions.append(hex_op)
 
-                    table.add_row([string_in_red(pc), string_in_blue(line), string_in_blue(arguments), string_in_red(hex_op)])
+                    table.add_row(
+                        [pc, line, arguments, hex_op])
 
                     # Increment Counters
                     count_instructions += 1
@@ -368,8 +352,8 @@ if __name__ == '__main__':
         print("\n" + " " * before_spaces + title)
 
         # Show Table
-        table.align[string_in_green("Instruction")] = "l"
-        table.align[string_in_green("Arguments")] = "l"
+        table.align["Instruction"] = "l"
+        table.align["Arguments"] = "l"
         print(table)
 
         # Calculate Indentation Results
@@ -393,4 +377,4 @@ if __name__ == '__main__':
             file.write("\n")
     file.close()
 
-    # webbrowser.open(new_file_name)
+    webbrowser.open(new_file_name)
