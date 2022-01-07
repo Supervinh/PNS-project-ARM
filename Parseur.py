@@ -238,6 +238,9 @@ def parse_from_line(w):
                     if labels.get(w[len(w) - 1]) < labels.get(label) < line_number:
                         number_of_labels_passed -= 1
 
+                if number_of_labels_passed < 0:
+                    number_of_labels_passed -= 1
+
                 if len(w) == 3:
                     w[1] = getBranchValue(w[1])
                     w[2] = labels.get(w[len(w) - 1]) - line_number - number_of_labels_passed - 3
