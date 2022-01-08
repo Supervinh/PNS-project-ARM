@@ -4,16 +4,30 @@
 
   <lib desc="#Wiring" name="0">
     <tool name="Splitter">
-      <a name="facing" val="west"/>
+      <a name="bit1" val="0"/>
+      <a name="bit10" val="2"/>
+      <a name="bit11" val="2"/>
+      <a name="bit12" val="3"/>
+      <a name="bit13" val="3"/>
+      <a name="bit14" val="3"/>
+      <a name="bit15" val="3"/>
+      <a name="bit2" val="0"/>
+      <a name="bit3" val="0"/>
+      <a name="bit4" val="1"/>
+      <a name="bit5" val="1"/>
+      <a name="bit6" val="1"/>
+      <a name="bit7" val="1"/>
+      <a name="bit8" val="2"/>
+      <a name="bit9" val="2"/>
       <a name="fanout" val="4"/>
-      <a name="incoming" val="1"/>
+      <a name="incoming" val="16"/>
     </tool>
     <tool name="Pin">
       <a name="facing" val="north"/>
     </tool>
     <tool name="Probe">
       <a name="facing" val="west"/>
-      <a name="radix" val="10unsigned"/>
+      <a name="radix" val="10signed"/>
     </tool>
     <tool name="Tunnel">
       <a name="facing" val="south"/>
@@ -25,9 +39,8 @@
       <a name="facing" val="north"/>
     </tool>
     <tool name="Constant">
-      <a name="facing" val="south"/>
       <a name="value" val="0x0"/>
-      <a name="width" val="2"/>
+      <a name="width" val="16"/>
     </tool>
     <tool name="Ground">
       <a name="facing" val="west"/>
@@ -557,10 +570,10 @@ end TCL_Generic;
     <wire from="(1140,500)" to="(1140,690)"/>
     <wire from="(1140,500)" to="(1250,500)"/>
     <wire from="(1160,1120)" to="(1160,1150)"/>
-    <wire from="(1160,230)" to="(1160,350)"/>
+    <wire from="(1160,220)" to="(1160,350)"/>
     <wire from="(1160,350)" to="(1250,350)"/>
     <wire from="(1160,770)" to="(1160,1090)"/>
-    <wire from="(1180,210)" to="(1180,270)"/>
+    <wire from="(1180,200)" to="(1180,270)"/>
     <wire from="(1180,270)" to="(1320,270)"/>
     <wire from="(1200,190)" to="(1200,210)"/>
     <wire from="(1200,210)" to="(1320,210)"/>
@@ -677,8 +690,8 @@ end TCL_Generic;
     <wire from="(920,150)" to="(1210,150)"/>
     <wire from="(920,170)" to="(1320,170)"/>
     <wire from="(920,190)" to="(1200,190)"/>
-    <wire from="(920,210)" to="(1180,210)"/>
-    <wire from="(920,230)" to="(1160,230)"/>
+    <wire from="(920,200)" to="(1180,200)"/>
+    <wire from="(920,220)" to="(1160,220)"/>
     <wire from="(920,250)" to="(1140,250)"/>
     <wire from="(920,270)" to="(1120,270)"/>
     <wire from="(920,290)" to="(1100,290)"/>
