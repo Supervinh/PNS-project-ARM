@@ -39,6 +39,7 @@
   </lib>
   <lib desc="#Gates" name="1">
     <tool name="NOT Gate">
+      <a name="facing" val="south"/>
       <a name="size" val="20"/>
     </tool>
     <tool name="AND Gate">
@@ -282,6 +283,7 @@ end TCL_Generic;
     </comp>
     <comp lib="0" loc="(570,120)" name="Bit Extender">
       <a name="out_width" val="11"/>
+      <a name="type" val="zero"/>
     </comp>
     <comp lib="0" loc="(600,440)" name="Constant">
       <a name="facing" val="west"/>
@@ -314,6 +316,10 @@ end TCL_Generic;
       <a name="facing" val="south"/>
       <a name="size" val="30"/>
     </comp>
+    <comp lib="1" loc="(520,470)" name="NOT Gate">
+      <a name="facing" val="south"/>
+      <a name="size" val="20"/>
+    </comp>
     <comp lib="1" loc="(590,370)" name="NOT Gate">
       <a name="size" val="20"/>
     </comp>
@@ -322,18 +328,23 @@ end TCL_Generic;
       <a name="selloc" val="tr"/>
     </comp>
     <comp lib="3" loc="(310,260)" name="Comparator">
+      <a name="mode" val="unsigned"/>
       <a name="width" val="1"/>
     </comp>
     <comp lib="3" loc="(310,310)" name="Comparator">
+      <a name="mode" val="unsigned"/>
       <a name="width" val="1"/>
     </comp>
     <comp lib="3" loc="(310,360)" name="Comparator">
+      <a name="mode" val="unsigned"/>
       <a name="width" val="1"/>
     </comp>
     <comp lib="3" loc="(310,410)" name="Comparator">
+      <a name="mode" val="unsigned"/>
       <a name="width" val="1"/>
     </comp>
     <comp lib="3" loc="(310,460)" name="Comparator">
+      <a name="mode" val="unsigned"/>
       <a name="width" val="1"/>
     </comp>
     <wire from="(150,250)" to="(270,250)"/>
@@ -408,8 +419,9 @@ end TCL_Generic;
     <wire from="(500,260)" to="(600,260)"/>
     <wire from="(510,530)" to="(510,540)"/>
     <wire from="(510,540)" to="(580,540)"/>
-    <wire from="(520,370)" to="(520,500)"/>
+    <wire from="(520,370)" to="(520,450)"/>
     <wire from="(520,370)" to="(570,370)"/>
+    <wire from="(520,470)" to="(520,500)"/>
     <wire from="(550,340)" to="(550,570)"/>
     <wire from="(550,340)" to="(600,340)"/>
     <wire from="(560,350)" to="(560,560)"/>
