@@ -39,6 +39,7 @@
       <a name="facing" val="north"/>
     </tool>
     <tool name="Constant">
+      <a name="facing" val="south"/>
       <a name="value" val="0x0"/>
       <a name="width" val="16"/>
     </tool>
