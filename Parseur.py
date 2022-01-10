@@ -1,6 +1,5 @@
 import os.path
 import re
-import webbrowser
 from tkinter import filedialog, Tk
 
 import prettytable
@@ -379,5 +378,3 @@ if __name__ == '__main__':
         if count % 16 == 0:
             file.write("\n")
     file.close()
-
-    webbrowser.open(new_file_name)
